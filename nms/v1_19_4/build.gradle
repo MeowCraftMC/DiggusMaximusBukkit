@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'io.papermc.paperweight.userdev' version '1.5.5'
+}
+
+group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_19_4'
+version = '1.0.0'
+
+println 'NMS v1.19.4 module'
+
+dependencies {
+    implementation project(':nms')
+    paperweight.paperDevBundle('1.19.4-R0.1-SNAPSHOT')
+}
+
+jar.finalizedBy(reobfJar)
+
+configurations.create('jar')
+
+reobfJar {
+    artifacts {
+        jar outputJar
+    }
+}

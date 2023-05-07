@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+group = 'cx.rain.mc.diggus_maximus_bukkit.nms'
+version = '1.0.0'
+
+println 'NMS common module'
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
+}
+

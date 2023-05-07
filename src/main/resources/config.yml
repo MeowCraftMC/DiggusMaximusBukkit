@@ -1,0 +1,15 @@
+# Todo: Not implemented yet.
+miner:
+  maxMineBlocks: 40
+  maxMineDistance: 10
+  autoPickup: true
+  requiresTool: false
+  dontBreakTool: true
+  toolDurability: true
+  playerExhaustion: true
+  exhaustionMultiplier: 1.0
+  useAllowList: false
+  shapeSupport: false
+tools: []
+blocklist: []
+allowlist: []
