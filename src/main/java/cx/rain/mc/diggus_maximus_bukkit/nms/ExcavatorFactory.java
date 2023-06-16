@@ -10,11 +10,13 @@ public class ExcavatorFactory {
     static {
         var bukkitVersion = Bukkit.getBukkitVersion();
         switch (bukkitVersion) {
+            case "1.20-R0.1-SNAPSHOT":
+            case "1.20.1-R0.1-SNAPSHOT":
             case "1.19.4-R0.1-SNAPSHOT":
                 EXCAVATOR = new ExcavatorImplV1_19_4();
                 break;
             default:
-                throw new RuntimeException("Not supported version!");
+                throw new RuntimeException("Not supported version:" + bukkitVersion);
         }
     }
 
