@@ -1,6 +1,6 @@
 package cx.rain.mc.diggus_maximus_bukkit.excavator;
 
-import cx.rain.mc.diggus_maximus_bukkit.channel.ChannelDiggusMaximus;
+import cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -53,7 +53,7 @@ public class Excavator {
     }
 
     private void excavate(Location pos) {
-        if (mined >= 40) {  // Todo: config.
+        if (mined >= DiggusMaximusBukkit.getInstance().getConfigManager().getMaxMineCount()) {
             return;
         }
 
@@ -75,7 +75,7 @@ public class Excavator {
     }
 
     private boolean canMine(Location pos) {
-        return pos.distance(startPos) < 11;
+        return pos.distance(startPos) < DiggusMaximusBukkit.getInstance().getConfigManager().getMaxMineDistance();
     }
 
     private static List<Location> getPositions(World world) {

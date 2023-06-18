@@ -1,13 +1,26 @@
 package cx.rain.mc.diggus_maximus_bukkit;
 
 import cx.rain.mc.diggus_maximus_bukkit.channel.ChannelDiggusMaximus;
+import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DiggusMaximusBukkit extends JavaPlugin {
     private static DiggusMaximusBukkit INSTANCE;
 
+    private final ConfigManager configManager;
+
     public DiggusMaximusBukkit() {
         INSTANCE = this;
+
+        configManager = new ConfigManager(this);
+    }
+
+    public static DiggusMaximusBukkit getInstance() {
+        return INSTANCE;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     @Override
@@ -22,9 +35,5 @@ public final class DiggusMaximusBukkit extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-    public static DiggusMaximusBukkit getInstance() {
-        return INSTANCE;
     }
 }

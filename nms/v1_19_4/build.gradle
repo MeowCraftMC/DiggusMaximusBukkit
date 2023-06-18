@@ -7,6 +7,7 @@ group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_19_4'
 version = '1.0.0'
 
 println 'NMS v1.19.4 module'
+println 'Also supports v1.20, v1.20.1'
 
 dependencies {
     implementation project(':nms')
