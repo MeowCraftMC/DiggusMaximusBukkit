@@ -3,13 +3,13 @@ plugins {
     id 'io.papermc.paperweight.userdev' version '1.5.5'
 }
 
-group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_19_4'
+group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_20_2'
 
-println 'NMS v1.19.4/v1.20/v1.20.1 module'
+println 'NMS v1.20.2 module'
 
 dependencies {
     implementation project(':nms')
-    paperweight.paperDevBundle('1.19.4-R0.1-SNAPSHOT')
+    paperweight.paperDevBundle('1.20.2-R0.1-SNAPSHOT')
 }
 
 jar.finalizedBy(reobfJar)
