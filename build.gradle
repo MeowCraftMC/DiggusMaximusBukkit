@@ -5,24 +5,16 @@ plugins {
 }
 
 group = 'cx.rain.mc.diggus_maximus_bukkit'
-version = '1.0.1'
+version = '1.0.2'
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
     implementation project(path: ':nms')
     implementation project(path: ':nms:v1_19_4', configuration: 'jar')
-    implementation project(path: ':nms:v1_20_2', configuration: 'jar')
+    implementation project(path: ':nms:vlatest', configuration: 'jar')
 }
 
 jar.finalizedBy(shadowJar)
-
-//shadowJar {
-//    artifacts {
-//        shadow(tasks.shadowJar.archivePath) {
-//            builtBy reobfJar
-//        }
-//    }
-//}
 
 allprojects {
     repositories {
@@ -65,7 +57,4 @@ allprojects {
             expand props
         }
     }
-}
-
-devServer {
 }

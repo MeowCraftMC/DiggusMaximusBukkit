@@ -1,4 +1,4 @@
-package cx.rain.mc.diggus_maximus_bukkit.nms.v1_20_2;
+package cx.rain.mc.diggus_maximus_bukkit.nms.vlatest;
 
 import cx.rain.mc.diggus_maximus_bukkit.nms.common.ExcavatePacket;
 import cx.rain.mc.diggus_maximus_bukkit.nms.common.IExcavator;
@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockFace;
 
-public class ExcavatorImplV1_20_2 implements IExcavator {
+public class ExcavatorImplVLatest implements IExcavator {
     @Override
     public ExcavatePacket read(byte[] packet) {
         var buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(packet));

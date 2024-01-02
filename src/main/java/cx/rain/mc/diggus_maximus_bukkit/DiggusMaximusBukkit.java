@@ -2,6 +2,7 @@ package cx.rain.mc.diggus_maximus_bukkit;
 
 import cx.rain.mc.diggus_maximus_bukkit.channel.ChannelDiggusMaximus;
 import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
+import cx.rain.mc.diggus_maximus_bukkit.nms.ExcavatorFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DiggusMaximusBukkit extends JavaPlugin {
@@ -28,6 +29,8 @@ public final class DiggusMaximusBukkit extends JavaPlugin {
         // Plugin startup logic
         getServer().getMessenger().registerIncomingPluginChannel(this, ChannelDiggusMaximus.CHANNEL_NAME, new ChannelDiggusMaximus());
         getServer().getMessenger().registerOutgoingPluginChannel(this, ChannelDiggusMaximus.CHANNEL_NAME);
+
+        ExcavatorFactory.getExcavator();
 
         getLogger().info("Loaded!");
     }
