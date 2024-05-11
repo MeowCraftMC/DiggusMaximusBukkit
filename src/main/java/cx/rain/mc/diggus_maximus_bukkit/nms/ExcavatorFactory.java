@@ -2,9 +2,10 @@ package cx.rain.mc.diggus_maximus_bukkit.nms;
 
 import cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit;
 import cx.rain.mc.diggus_maximus_bukkit.nms.common.IExcavator;
+import cx.rain.mc.diggus_maximus_bukkit.nms.other.ExcavatorImplVOther;
 import cx.rain.mc.diggus_maximus_bukkit.nms.v1_19_4.ExcavatorImplV1_19_4;
 import cx.rain.mc.diggus_maximus_bukkit.nms.v1_20_4.ExcavatorImplV1_20_4;
-import cx.rain.mc.diggus_maximus_bukkit.nms.vlatest.ExcavatorImplVLatest;
+import cx.rain.mc.diggus_maximus_bukkit.nms.v1_20_6.ExcavatorImplV1_20_6;
 import org.bukkit.Bukkit;
 
 public class ExcavatorFactory {
@@ -17,10 +18,12 @@ public class ExcavatorFactory {
                 EXCAVATOR = new ExcavatorImplV1_19_4();
             case "1.20-R0.1-SNAPSHOT", "1.20.1-R0.1-SNAPSHOT", "1.20.2-R0.1-SNAPSHOT", "1.20.3-R0.1-SNAPSHOT", "1.20.4-R0.1-SNAPSHOT" ->
                 EXCAVATOR = new ExcavatorImplV1_20_4();
+            case "1.20.5-R0.1-SNAPSHOT", "1.20.6-R0.1-SNAPSHOT" ->
+                EXCAVATOR = new ExcavatorImplV1_20_6();
             default -> {
                 DiggusMaximusBukkit.getInstance().getLogger().warning("Not supported version: " + bukkitVersion
-                        + ", use it at our own risk.");
-                EXCAVATOR = new ExcavatorImplVLatest();
+                        + ", we will try to work, but use it at our own risk.");
+                EXCAVATOR = new ExcavatorImplVOther();
             }
         }
     }

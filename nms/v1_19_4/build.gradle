@@ -1,11 +1,17 @@
 plugins {
     id 'java'
-    id 'io.papermc.paperweight.userdev' version '1.5.11'
+    id 'io.papermc.paperweight.userdev' version "${paperweight_plugin_version}"
 }
 
 group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_19_4'
 
 println 'NMS v1.19.4 module'
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    options.release = 17
+}
 
 dependencies {
     implementation project(':nms')

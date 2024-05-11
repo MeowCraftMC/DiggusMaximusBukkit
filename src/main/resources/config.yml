@@ -1,14 +1,26 @@
-miner:
-  maxMineBlocks: 40
-  maxMineDistance: 11
-  autoPickup: true          # Todo: Not implemented yet.
-  requiresTool: false       # Todo: Not implemented yet.
-  dontBreakTool: true       # Todo: Not implemented yet.
-  toolDurability: true      # Todo: Not implemented yet.
-  playerExhaustion: true    # Todo: Not implemented yet.
-  exhaustionMultiplier: 1.0 # Todo: Not implemented yet.
-  useAllowList: false       # Todo: Not implemented yet.
-  shapeSupport: false       # Todo: Not implemented yet.
-tools: []       # Todo: Not implemented yet.
-blocklist: []   # Todo: Not implemented yet.
-allowlist: []   # Todo: Not implemented yet.
+maxMineCount: 40
+maxDistance: 11
+
+enableShape: false                # Todo: Not implemented yet.
+
+autoPickup: true                  # Todo: Not implemented yet.
+
+playerExhaustion: true            # Todo: Not implemented yet.
+exhaustionMultiplier: 1.0         # Todo: Not implemented yet.
+
+damageTool: true                  # Todo: Not implemented yet.
+dontBreakTool: true               # Todo: Not implemented yet.
+
+requiresCustomMatchedTool: false  # Todo: Not implemented yet.
+
+useBlockAllowList: false          # Todo: Not implemented yet.
+
+customMatchedTools:               # Todo: Not implemented yet.
+  WOODEN_PICKAXE:
+    - STONE
+
+blocklist:                        # Todo: Not implemented yet.
+  - GRASS_BLOCK
+
+allowlist:                        # Todo: Not implemented yet.
+  - COBBLESTONE

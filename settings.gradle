@@ -1,6 +1,14 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = "https://repo.papermc.io/repository/maven-public/" }
+    }
+}
+
 rootProject.name = 'DiggusMaximusBukkit'
 
 include ':nms'
 include ':nms:v1_19_4'
 include ':nms:v1_20_4'
-include ':nms:vlatest'
+include ':nms:v1_20_6'
+include ':nms:other'

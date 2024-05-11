@@ -3,9 +3,9 @@ plugins {
     id 'io.papermc.paperweight.userdev' version "${paperweight_plugin_version}"
 }
 
-group = 'cx.rain.mc.diggus_maximus_bukkit.nms.v1_20_4'
+group = 'cx.rain.mc.diggus_maximus_bukkit.nms.other'
 
-println 'NMS v1.20.4 module'
+println 'NMS ver other module'
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -15,7 +15,7 @@ compileJava {
 
 dependencies {
     implementation project(':nms')
-    paperweight.paperDevBundle('1.20.4-R0.1-SNAPSHOT')
+    paperweight.paperDevBundle('1.19.3-R0.1-SNAPSHOT')
 }
 
 jar.finalizedBy(reobfJar)

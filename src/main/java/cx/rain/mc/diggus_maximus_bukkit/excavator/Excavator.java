@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -17,8 +18,11 @@ public class Excavator {
     private final Block block;
     private final Material blockMaterial;
     private final Location startPos;
+    private final ItemStack tool;
 
     private final Deque<Location> points = new ArrayDeque<>();
+
+    private final List<ItemStack> items = new ArrayList<>();
 
     private int mined = 0;
 
@@ -27,6 +31,7 @@ public class Excavator {
         this.block = startPos.getBlock();
         this.blockMaterial = this.block.getType();
         this.startPos = startPos;
+        this.tool = player.getInventory().getItemInMainHand();
     }
 
     public void start() {
@@ -59,7 +64,7 @@ public class Excavator {
 
         var blockToBreak = pos.getBlock();
         if (isSame(blockToBreak)
-                && canMine(pos)
+                && checkDistance(pos)
                 && player.breakBlock(blockToBreak)) {
             points.add(pos);
             mined++;
@@ -74,8 +79,16 @@ public class Excavator {
         return (Math.abs(pos.getBlockX()) + Math.abs(pos.getBlockY()) + Math.abs(pos.getBlockZ())) != 0;
     }
 
-    private boolean canMine(Location pos) {
+    private boolean checkDistance(Location pos) {
         return pos.distance(startPos) < DiggusMaximusBukkit.getInstance().getConfigManager().getMaxMineDistance();
+    }
+
+    private boolean isMatchedTool(Block block) {
+        if (DiggusMaximusBukkit.getInstance().getConfigManager().hasCustomMatchedTool()) {
+            return DiggusMaximusBukkit.getInstance().getConfigManager().isCustomMatchedTool(tool.getType(), block.getType());
+        } else {
+            return true;
+        }
     }
 
     private static List<Location> getPositions(World world) {

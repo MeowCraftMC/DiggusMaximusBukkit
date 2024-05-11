@@ -4,19 +4,6 @@ plugins {
     id 'com.rikonardo.papermake' version '1.0.6'
 }
 
-group = 'cx.rain.mc.diggus_maximus_bukkit'
-version = '1.0.2'
-
-dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
-    implementation project(path: ':nms')
-    implementation project(path: ':nms:v1_19_4', configuration: 'jar')
-    implementation project(path: ':nms:v1_20_4', configuration: 'jar')
-    implementation project(path: ':nms:vlatest', configuration: 'jar')
-}
-
-jar.finalizedBy(shadowJar)
-
 allprojects {
     repositories {
         mavenCentral()
@@ -25,28 +12,16 @@ allprojects {
             url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
         maven {
+            name = 'PaperMC repo'
+            url = 'https://repo.papermc.io/repository/maven-snapshots/'
+        }
+        maven {
             name = 'CodeMC NMS repo'
             url = 'https://repo.codemc.io/repository/nms/'
         }
         maven {
             name = 'sonatype'
             url = 'https://oss.sonatype.org/content/groups/public/'
-        }
-    }
-
-    def targetJavaVersion = 17
-    java {
-        def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-        if (JavaVersion.current() < javaVersion) {
-            toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-        }
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-            options.release = targetJavaVersion
         }
     }
 
@@ -59,3 +34,23 @@ allprojects {
         }
     }
 }
+
+group = 'cx.rain.mc.diggus_maximus_bukkit'
+version = '1.0.3'
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    options.release = 17
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
+    implementation project(path: ':nms')
+    implementation project(path: ':nms:other', configuration: 'jar')
+    implementation project(path: ':nms:v1_19_4', configuration: 'jar')
+    implementation project(path: ':nms:v1_20_4', configuration: 'jar')
+    implementation project(path: ':nms:v1_20_6', configuration: 'jar')
+}
+
+jar.finalizedBy(shadowJar)
