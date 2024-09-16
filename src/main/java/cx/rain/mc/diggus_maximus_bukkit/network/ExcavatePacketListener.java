@@ -22,6 +22,10 @@ public class ExcavatePacketListener extends PacketAdapter {
     @Override
     public void onPacketReceiving(PacketEvent event) {
         var payload = new CustomPayloadWrapper.Modifier(event.getPacket().getModifier()).read(0);
+        if (payload == null) {
+            return;
+        }
+
         if (PluginConstants.PACKET_ID.equals(payload.getId())) {
             var packet = PacketReader.read(payload.getData());
             var player = event.getPlayer();

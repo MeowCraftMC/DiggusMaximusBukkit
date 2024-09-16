@@ -11,8 +11,29 @@ import org.bukkit.NamespacedKey;
 public class CustomPayloadWrapper {
     public static final Class<?> NMS_CLASS = MinecraftReflection.getMinecraftClass("network.protocol.common.custom.DiscardedPayload");
 
-    public static final EquivalentConverter<CustomPayloadWrapper> CONVERTER = AutoWrapper.wrap(CustomPayloadWrapper.class, NMS_CLASS)
-            .field(0, NamespacedKeyConverter.INSTANCE);
+    public static final EquivalentConverter<CustomPayloadWrapper> CONVERTER = new EquivalentConverter<CustomPayloadWrapper>() {
+        private final EquivalentConverter<CustomPayloadWrapper> internal = AutoWrapper.wrap(CustomPayloadWrapper.class, NMS_CLASS)
+                .field(0, NamespacedKeyConverter.INSTANCE);
+
+        @Override
+        public Object getGeneric(CustomPayloadWrapper specific) {
+            return internal.getGeneric(specific);
+        }
+
+        @Override
+        public CustomPayloadWrapper getSpecific(Object generic) {
+            if (MinecraftReflection.is(NMS_CLASS, generic)) {
+                return internal.getSpecific(generic);
+            }
+
+            return null;
+        }
+
+        @Override
+        public Class<CustomPayloadWrapper> getSpecificType() {
+            return CustomPayloadWrapper.class;
+        }
+    };
 
     private NamespacedKey id;
     private ByteBuf data;
