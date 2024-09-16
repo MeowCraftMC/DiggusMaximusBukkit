@@ -1,9 +1,10 @@
 # DiggusMaximusBukkit
-A bukkit server implementation for fabric mod DiggusMaximus.
+A bukkit server implementation for fabric mod [DiggusMaximus](https://www.curseforge.com/minecraft/mc-mods/diggus-maximus) and [DiggusMaximusReborn](https://www.curseforge.com/minecraft/mc-mods/diggus-maximus-reborn).  
 
 ## Permissions
-- `diggusmaximus.enabled`  
-Enable for a player.
+- `diggusmaximus.use`    
+Enable for a player, default is true.  
 
 ## Todo
-- [ ] All the settings at server.
+- [x] Shapes support.  
+- [ ] Settings per player.  

@@ -22,19 +22,15 @@ public class ConfigManager {
     }
 
     public boolean isEnableShape() {
-        return config.getBoolean("enableShape", false);
+        return config.getBoolean("enableShape", true);
+    }
+
+    public boolean isEnableDiagonally() {
+        return config.getBoolean("diagonally", false);
     }
 
     public boolean isAutoPickup() {
         return config.getBoolean("autoPickup", true);
-    }
-
-    public boolean shouldPlayerExhaustion() {
-        return config.getBoolean("playerExhaustion", true);
-    }
-
-    public double getExhaustionMultiplier() {
-        return config.getDouble("exhaustionMultiplier", 1.0);
     }
 
     public boolean willDamageTool() {
@@ -45,16 +41,12 @@ public class ConfigManager {
         return config.getBoolean("dontBreakTool", true);
     }
 
-    public boolean hasCustomMatchedTool() {
-        return config.getBoolean("requiresCustomMatchedTool", true);
-    }
-
-    public boolean shouldUseBlockAllowList() {
-        return config.getBoolean("useBlockAllowList", true);
+    public boolean requireToolMatches() {
+        return config.getBoolean("requireToolMatches", false);
     }
 
     public boolean isCustomMatchedTool(Material tool, Material block) {
-        var section = config.getConfigurationSection("customMatchedTools");
+        var section = config.getConfigurationSection("customToolsMatch");
 
         if (section != null && section.contains(tool.name())) {
             return section.getStringList(tool.name()).contains(block.name());
@@ -63,11 +55,28 @@ public class ConfigManager {
         return false;
     }
 
+    public boolean isInSameGroup(Material block, Material other) {
+        var section = config.getConfigurationSection("customGroup");
+        if (section != null) {
+            for (var n : section.getKeys(false)) {
+                var group = section.getStringList(n);
+                if (group.contains(block.name()) && group.contains(other.name())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isInBlockList(Material block) {
         return config.getStringList("blocklist").contains(block.name());
     }
 
+    public boolean shouldUseBlockAllowList() {
+        return config.getBoolean("enableAllowList", false);
+    }
+
     public boolean isInAllowList(Material block) {
-        return config.getStringList("allowlist").contains(block.name());
+        return shouldUseBlockAllowList() && config.getStringList("allowlist").contains(block.name());
     }
 }

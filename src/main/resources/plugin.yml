@@ -1,8 +1,13 @@
 name: DiggusMaximusBukkit
 version: '${version}'
 main: cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit
-api-version: 1.19
+api-version: 1.21
 author: qyl27
 prefix: DiggusMaximusBukkit
 description: A bukkit server implementation for fabric mod DiggusMaximus.
-
+load: POSTWORLD
+depend:
+  - ProtocolLib
+permissions:
+  diggusmaximus.use:
+    default: true

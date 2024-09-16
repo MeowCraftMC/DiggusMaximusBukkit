@@ -4,6 +4,9 @@ plugins {
     id 'com.rikonardo.papermake' version '1.0.6'
 }
 
+group = 'cx.rain.mc.diggus_maximus_bukkit'
+version = '1.2.0'
+
 allprojects {
     repositories {
         mavenCentral()
@@ -14,6 +17,10 @@ allprojects {
         maven {
             name = 'PaperMC repo'
             url = 'https://repo.papermc.io/repository/maven-snapshots/'
+        }
+        maven {
+            name = 'dmulloy2-repo'
+            url = 'https://repo.dmulloy2.net/repository/public/'
         }
         maven {
             name = 'CodeMC NMS repo'
@@ -35,23 +42,18 @@ allprojects {
     }
 }
 
-group = 'cx.rain.mc.diggus_maximus_bukkit'
-version = '1.0.4'
-
 compileJava {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    options.release = 17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    options.release = 21
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
-    implementation project(path: ':nms')
-    implementation project(path: ':nms:other', configuration: 'jar')
-    implementation project(path: ':nms:v1_19_4', configuration: 'jar')
-    implementation project(path: ':nms:v1_20_4', configuration: 'jar')
-    implementation project(path: ':nms:v1_20_6', configuration: 'jar')
-    implementation project(path: ':nms:v1_21', configuration: 'jar')
+    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT'
+
+    compileOnly 'org.jetbrains:annotations:24.0.0'
+    compileOnly 'io.netty:netty-buffer:4.1.97.Final'
 }
 
 jar.finalizedBy(shadowJar)

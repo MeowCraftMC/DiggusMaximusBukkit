@@ -1,26 +1,33 @@
 maxMineCount: 40
 maxDistance: 11
 
-enableShape: false                # Todo: Not implemented yet.
+# Shape excavation support.
+enableShape: false
 
-autoPickup: true                  # Todo: Not implemented yet.
+# Should mine diagonally(BFS). Otherwise will DFS.
+diagonally: false
 
-playerExhaustion: true            # Todo: Not implemented yet.
-exhaustionMultiplier: 1.0         # Todo: Not implemented yet.
+# Automatically collect drops into players' inventory.
+autoPickup: true
 
-damageTool: true                  # Todo: Not implemented yet.
-dontBreakTool: true               # Todo: Not implemented yet.
+# Damage tool.
+damageTool: true
+# Stop excavate before tool break.
+dontBreakTool: true
 
-requiresCustomMatchedTool: false  # Todo: Not implemented yet.
+# Prevent tool mismatch.
+requireToolMatches: false
+customToolsMatch:
+  # Tool Material:
+  #  - Block Material
 
-useBlockAllowList: false          # Todo: Not implemented yet.
+# Group for excavating.
+customGroup:
+  # GroupName:
+  #  - Block Material
 
-customMatchedTools:               # Todo: Not implemented yet.
-  WOODEN_PICKAXE:
-    - STONE
+blocklist: []
 
-blocklist:                        # Todo: Not implemented yet.
-  - GRASS_BLOCK
-
-allowlist:                        # Todo: Not implemented yet.
-  - COBBLESTONE
+# Allowlist have a higher priority than blocklist.
+enableAllowList: false
+allowlist: []
