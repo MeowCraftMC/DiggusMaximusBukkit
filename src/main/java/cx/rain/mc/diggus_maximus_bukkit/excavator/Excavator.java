@@ -1,5 +1,6 @@
 package cx.rain.mc.diggus_maximus_bukkit.excavator;
 
+import cx.rain.mc.diggus_maximus_bukkit.PluginConstants;
 import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
 import cx.rain.mc.diggus_maximus_bukkit.network.ExcavatePacket;
 import cx.rain.mc.diggus_maximus_bukkit.utility.BlockFacing;
@@ -52,6 +53,10 @@ public class Excavator {
     }
 
     public void start() {
+        if (!player.hasPermission(PluginConstants.PERMISSION)) {
+            return;
+        }
+
         var block = startPos.getBlock();
         if (block.isEmpty() || player.breakBlock(block)) {
             points.add(startPos);

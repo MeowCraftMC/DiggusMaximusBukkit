@@ -55,5 +55,3 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:24.0.0'
     compileOnly 'io.netty:netty-buffer:4.1.97.Final'
 }
-
-jar.finalizedBy(shadowJar)
