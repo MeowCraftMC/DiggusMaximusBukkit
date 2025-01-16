@@ -5,10 +5,10 @@ public enum ExcavateShape {
     HORIZONTAL_LAYER(0),
     LAYER(1),
     HOLE(2),
-    ONExTWO(3),
-    ONExTWO_TUNNEL(4),
-    THREExTHREE(5),
-    THREExTHREE_TUNNEL(6),
+    ONE_TWO(3),
+    ONE_TWO_TUNNEL(4),
+    THREE_THREE(5),
+    THREE_THREE_TUNNEL(6),
     ;
 
     private final int id;
@@ -19,15 +19,14 @@ public enum ExcavateShape {
 
     public static ExcavateShape fromId(int id) {
         return switch (id) {
-            case -1 -> NONE;
             case 0 -> HORIZONTAL_LAYER;
             case 1 -> LAYER;
             case 2 -> HOLE;
-            case 3 -> ONExTWO;
-            case 4 -> ONExTWO_TUNNEL;
-            case 5 -> THREExTHREE;
-            case 6 -> THREExTHREE_TUNNEL;
-            default -> throw new IllegalStateException("Unexpected value: " + id);
+            case 3 -> ONE_TWO;
+            case 4 -> ONE_TWO_TUNNEL;
+            case 5 -> THREE_THREE;
+            case 6 -> THREE_THREE_TUNNEL;
+            default -> NONE;
         };
     }
 }

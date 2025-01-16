@@ -1,5 +1,6 @@
 package cx.rain.mc.diggus_maximus_bukkit.excavator;
 
+import cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit;
 import cx.rain.mc.diggus_maximus_bukkit.PluginConstants;
 import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
 import cx.rain.mc.diggus_maximus_bukkit.network.ExcavatePacket;
@@ -18,10 +19,8 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Objects;
 
 public class Excavator {
-    private final ConfigManager configManager;
     private final Player player;
     private final World world;
     private final Location startPos;
@@ -34,9 +33,7 @@ public class Excavator {
     private final Deque<Location> points = new ArrayDeque<>();
     private int mined = 0;
 
-    public Excavator(ConfigManager configManager, ExcavatePacket packet, Player player) {
-        this.configManager = configManager;
-
+    public Excavator(ExcavatePacket packet, Player player) {
         this.player = player;
         this.world = player.getWorld();
 
@@ -49,7 +46,7 @@ public class Excavator {
         this.startId = Material.matchMaterial(packet.id().toString());
 
         this.tool = player.getInventory().getItem(EquipmentSlot.HAND);
-        this.toolBefore = tool != null ? tool.clone() : null;
+        this.toolBefore = tool.clone();
     }
 
     public void start() {
@@ -66,18 +63,22 @@ public class Excavator {
         while (!points.isEmpty()) {
             spread(points.remove());
         }
+
+        if (!getConfig().willDamageTool()) {
+            player.getInventory().setItemInMainHand(toolBefore);
+        }
     }
 
     private void spread(Location pos) {
-        for (var p : ExcavateSpreadHelper.getSpreadType(configManager, shape, facing, startPos, pos)) {
+        for (var p : ExcavateSpreadHelper.getOffsets(shape, facing, startPos, pos)) {
             if (isValidPos(p)) {
-                excavate(pos.clone().add(p));
+                tryToExcavate(pos.clone().add(p));
             }
         }
     }
 
-    private void excavate(Location pos) {
-        if (mined >= configManager.getMaxMineCount() || (configManager.willDamageTool() && configManager.shouldDontBreakTool() && isToolAlmostBreak())) {
+    private void tryToExcavate(Location pos) {
+        if (mined >= getConfig().getMaxMineCount() || (getConfig().willDamageTool() && getConfig().shouldDontBreakTool() && isToolAlmostBreak())) {
             return;
         }
 
@@ -88,22 +89,22 @@ public class Excavator {
                 && isMatchedTool(block)
                 && isBreakable(block)
                 && player.breakBlock(block)) {
-            points.add(pos);
-            mined++;
+            excavate(pos);
+        }
+    }
 
-            if (!configManager.willDamageTool()) {
-                player.getInventory().setItemInMainHand(toolBefore);
-            }
+    private void excavate(Location pos) {
+        points.add(pos);
+        mined++;
 
-            if (configManager.isAutoPickup()) {
-                world.getNearbyEntities(BoundingBox.of(block), e -> e instanceof Item && e.isValid())
-                        .stream()
-                        .map(e -> (Item) e)
-                        .forEach(e -> {
-                            player.getInventory().addItem(e.getItemStack());
-                            e.remove();
-                        });
-            }
+        if (getConfig().isAutoPickup()) {
+            world.getNearbyEntities(BoundingBox.of(pos.getBlock()), e -> e instanceof Item && e.isValid())
+                    .stream()
+                    .map(e -> (Item) e)
+                    .forEach(e -> {
+                        player.getInventory().addItem(e.getItemStack());
+                        e.remove();
+                    });
         }
     }
 
@@ -116,7 +117,11 @@ public class Excavator {
     }
 
     private boolean isSame(Block block) {
-        return configManager.isInSameGroup(startId, block.getType())
+        if (shape != ExcavateShape.NONE) {
+            return getConfig().shouldShapeIgnoresBlockMismatch();
+        }
+
+        return getConfig().isInSameGroup(startId, block.getType())
                 || startId.equals(block.getType());
     }
 
@@ -125,12 +130,12 @@ public class Excavator {
     }
 
     private boolean checkDistance(Location pos) {
-        return pos.distance(startPos) < configManager.getMaxMineDistance();
+        return pos.distance(startPos) < getConfig().getMaxMineDistance();
     }
 
     private boolean isMatchedTool(Block block) {
-        if (configManager.requireToolMatches()) {
-            return configManager.isCustomMatchedTool(tool.getType(), block.getType())
+        if (getConfig().requireToolMatches()) {
+            return getConfig().isCustomMatchedTool(tool.getType(), block.getType())
                     || block.isPreferredTool(tool);
         } else {
             return true;
@@ -138,10 +143,14 @@ public class Excavator {
     }
 
     private boolean isBreakable(Block block) {
-        if (configManager.isInBlockList(block.getType()) || configManager.isInAllowList(block.getType())) {
+        if (getConfig().isInBlockList(block.getType()) || getConfig().isInAllowList(block.getType())) {
             return false;
         }
 
         return block.getType().getHardness() >= 0;
+    }
+
+    private ConfigManager getConfig() {
+        return DiggusMaximusBukkit.getInstance().getConfigManager();
     }
 }

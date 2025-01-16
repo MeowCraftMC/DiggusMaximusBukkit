@@ -29,7 +29,7 @@ public class ExcavatePacketListener extends PacketAdapter {
         if (PluginConstants.PACKET_ID.equals(payload.getId())) {
             var packet = PacketReader.read(payload.getData());
             var player = event.getPlayer();
-            var excavate = new Excavator(configManager, packet, player);
+            var excavate = new Excavator(packet, player);
             Bukkit.getScheduler().runTask(plugin, excavate::start);
         }
     }

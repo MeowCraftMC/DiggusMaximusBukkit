@@ -21,6 +21,14 @@ public final class DiggusMaximusBukkit extends JavaPlugin {
         configManager = new ConfigManager(this);
     }
 
+    public static DiggusMaximusBukkit getInstance() {
+        return INSTANCE;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
     @Override
     public void onLoad() {
         protocolManager = ProtocolLibrary.getProtocolManager();

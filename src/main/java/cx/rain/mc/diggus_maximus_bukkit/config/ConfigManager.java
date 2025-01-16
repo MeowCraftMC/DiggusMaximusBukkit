@@ -25,8 +25,12 @@ public class ConfigManager {
         return config.getBoolean("enableShape", true);
     }
 
-    public boolean isEnableDiagonally() {
-        return config.getBoolean("diagonally", false);
+    public boolean shouldShapeIgnoresBlockMismatch() {
+        return config.getBoolean("shapeIgnoresBlockMismatch", true);
+    }
+
+    public boolean isDiagonallyMine() {
+        return config.getBoolean("diagonallyMine", true);
     }
 
     public boolean isAutoPickup() {

@@ -1,11 +1,8 @@
 maxMineCount: 40
 maxDistance: 11
 
-# Shape excavation support.
-enableShape: false
-
-# Should mine diagonally(BFS). Otherwise will DFS.
-diagonally: false
+# Should mine diagonally(DFS). Otherwise will BFS.
+diagonallyMine: true
 
 # Automatically collect drops into players' inventory.
 autoPickup: true
@@ -14,6 +11,12 @@ autoPickup: true
 damageTool: true
 # Stop excavate before tool break.
 dontBreakTool: true
+
+# Shape excavation support.
+enableShape: true
+
+# Shape excavation ignore block type.
+shapeIgnoresBlockMismatch: true
 
 # Prevent tool mismatch.
 requireToolMatches: false

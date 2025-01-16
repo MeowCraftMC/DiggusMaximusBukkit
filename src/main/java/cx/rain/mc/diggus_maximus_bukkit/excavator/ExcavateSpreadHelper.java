@@ -1,5 +1,6 @@
 package cx.rain.mc.diggus_maximus_bukkit.excavator;
 
+import cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit;
 import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
 import cx.rain.mc.diggus_maximus_bukkit.utility.BlockFacing;
 import org.bukkit.Axis;
@@ -11,117 +12,124 @@ import java.util.List;
 
 public class ExcavateSpreadHelper {
 
-    public static List<Vector> getSpreadType(ConfigManager configManager, ExcavateShape shape, BlockFacing facing,
-                                             Location startPos, Location curPos) {
-        if (!configManager.isEnableShape()) {
-            return configManager.isEnableDiagonally() ? ExcavateSpreadHelper.standardDiag : ExcavateSpreadHelper.standard;
+    public static List<Vector> getOffsets(ExcavateShape shape, BlockFacing facing,
+                                          Location startPos, Location curPos) {
+        if (shape == ExcavateShape.NONE) {
+            return getConfig().isDiagonallyMine() ? ExcavateSpreadHelper.standardDiag : ExcavateSpreadHelper.standard;
+        }
+
+        if (!getConfig().isEnableShape()) {
+            return List.of();
         }
 
         return switch (shape) {
-            case NONE -> configManager.isEnableDiagonally() ? ExcavateSpreadHelper.standardDiag : ExcavateSpreadHelper.standard;
             case HOLE -> ExcavateSpreadHelper.hole(facing);
             case HORIZONTAL_LAYER -> ExcavateSpreadHelper.horizontalLayer();
             case LAYER -> ExcavateSpreadHelper.layers(facing);
-            case ONExTWO -> ExcavateSpreadHelper.oneByTwo(startPos, curPos);
-            case ONExTWO_TUNNEL -> ExcavateSpreadHelper.oneByTwoTunnel(startPos, curPos, facing);
-            case THREExTHREE -> ExcavateSpreadHelper.threeByThree(startPos, curPos, facing);
-            case THREExTHREE_TUNNEL -> ExcavateSpreadHelper.threeByThreeTunnel(startPos, curPos, facing);
+            case ONE_TWO -> ExcavateSpreadHelper.oneByTwo(startPos, curPos);
+            case ONE_TWO_TUNNEL -> ExcavateSpreadHelper.oneByTwoTunnel(startPos, curPos, facing);
+            case THREE_THREE -> ExcavateSpreadHelper.threeByThree(startPos, curPos, facing);
+            case THREE_THREE_TUNNEL -> ExcavateSpreadHelper.threeByThreeTunnel(startPos, curPos, facing);
+            default -> List.of();
         };
     }
 
-    public static List<Vector> horizontalLayer() {
-        List<Vector> cube = new ArrayList<>();
-        cube.add(new Vector(1, 0, 0));
-        cube.add(new Vector(0, 0, 1));
-        cube.add(new Vector(-1, 0, 0));
-        cube.add(new Vector(0, 0, -1));
-        return cube;
+    private static List<Vector> horizontalLayer() {
+        var offsets = new ArrayList<Vector>();
+        offsets.add(new Vector(1, 0, 0));
+        offsets.add(new Vector(0, 0, 1));
+        offsets.add(new Vector(-1, 0, 0));
+        offsets.add(new Vector(0, 0, -1));
+        return offsets;
     }
 
-    public static List<Vector> layers(BlockFacing facing) {
+    private static List<Vector> layers(BlockFacing facing) {
         if (facing.getAxis() == Axis.Y) {
             return horizontalLayer();
         }
 
-        List<Vector> cube = new ArrayList<>();
-        cube.add(new Vector(0, 1, 0));
-        cube.add(new Vector(0, -1, 0));
+        var offsets = new ArrayList<Vector>();
+        offsets.add(new Vector(0, 1, 0));
+        offsets.add(new Vector(0, -1, 0));
         if (facing.getAxis() == Axis.Z) {
-            cube.add(new Vector(1, 0, 0));
-            cube.add(new Vector(-1, 0, 0));
+            offsets.add(new Vector(1, 0, 0));
+            offsets.add(new Vector(-1, 0, 0));
         } else {
-            cube.add(new Vector(0, 0, 1));
-            cube.add(new Vector(0, 0, -1));
+            offsets.add(new Vector(0, 0, 1));
+            offsets.add(new Vector(0, 0, -1));
         }
-        return cube;
+        return offsets;
     }
 
-    public static List<Vector> hole(BlockFacing facing) {
-        List<Vector> cube = new ArrayList<>();
-        cube.add(new Vector(0, 0, 0).add(facing.getFacing().getOppositeFace().getDirection()));
-        return cube;
+    private static List<Vector> hole(BlockFacing facing) {
+        var offsets = new ArrayList<Vector>();
+        offsets.add(new Vector(0, 0, 0).add(facing.getFacing().getOppositeFace().getDirection()));
+        return offsets;
+    }
+
+    private static List<Vector> oneByTwo(Location startPos, Location curPos) {
+        var offsets = new ArrayList<Vector>();
+        if (startPos.getY() == curPos.getY()) {
+            offsets.add(new Vector(0, -1, 0));
+        }
+        return offsets;
+    }
+
+    private static List<Vector> oneByTwoTunnel(Location startPos, Location curPos, BlockFacing facing) {
+        var offsets = hole(facing);
+        if (startPos.getY() == curPos.getY()) {
+            offsets.add(new Vector(0, -1, 0));
+        }
+        return offsets;
     }
 
     public static List<Vector> threeByThree(Location startPos, Location curPos, BlockFacing facing) {
-        List<Vector> cube = new ArrayList<>();
+        var offsets = new ArrayList<Vector>();
         if (startPos.equals(curPos)) {
-            if (facing.isHorizontal()) {
-                cube.add(new Vector(0, 1, 0));
-                cube.add(new Vector(0, -1, 0));
-                if (facing == BlockFacing.NORTH || facing == BlockFacing.SOUTH) {
-                    cube.add(new Vector(1, 0, 0));
-                    cube.add(new Vector(-1, 0, 0));
-                    cube.add(new Vector(1, 1, 0));
-                    cube.add(new Vector(-1, 1, 0));
-                    cube.add(new Vector(1, -1, 0));
-                    cube.add(new Vector(-1, -1, 0));
-                } else {
-                    cube.add(new Vector(0, 0, 1));
-                    cube.add(new Vector(0, 0, -1));
-                    cube.add(new Vector(0, 1, 1));
-                    cube.add(new Vector(0, 1, -1));
-                    cube.add(new Vector(0, -1, 1));
-                    cube.add(new Vector(0, -1, -1));
-                }
-            } else {
-                cube.add(new Vector(1, 0, 0));
-                cube.add(new Vector(-1, 0, 0));
-                cube.add(new Vector(1, 0, 1));
-                cube.add(new Vector(-1, 0, 1));
-                cube.add(new Vector(0, 0, 1));
-                cube.add(new Vector(0, 0, -1));
-                cube.add(new Vector(1, 0, -1));
-                cube.add(new Vector(-1, 0, -1));
+            if (facing.getAxis() == Axis.Z) {
+                offsets.add(new Vector(0, 0, 1));
+                offsets.add(new Vector(0, 0, -1));
+                offsets.add(new Vector(0, 1, 1));
+                offsets.add(new Vector(0, 1, 0));
+                offsets.add(new Vector(0, 1, -1));
+                offsets.add(new Vector(0, -1, 1));
+                offsets.add(new Vector(0, -1, 0));
+                offsets.add(new Vector(0, -1, -1));
+            }
+
+            if (facing.getAxis() == Axis.Z) {
+                offsets.add(new Vector(1, 0, 0));
+                offsets.add(new Vector(-1, 0, 0));
+                offsets.add(new Vector(1, 1, 0));
+                offsets.add(new Vector(0, 1, 0));
+                offsets.add(new Vector(-1, 1, 0));
+                offsets.add(new Vector(1, -1, 0));
+                offsets.add(new Vector(0, -1, 0));
+                offsets.add(new Vector(-1, -1, 0));
+            }
+
+            if (facing.getAxis() == Axis.Y) {
+                offsets.add(new Vector(1, 0, 0));
+                offsets.add(new Vector(-1, 0, 0));
+                offsets.add(new Vector(1, 0, 1));
+                offsets.add(new Vector(-1, 0, 1));
+                offsets.add(new Vector(0, 0, 1));
+                offsets.add(new Vector(0, 0, -1));
+                offsets.add(new Vector(1, 0, -1));
+                offsets.add(new Vector(-1, 0, -1));
             }
         }
-        return cube;
+        return offsets;
     }
 
-    public static List<Vector> threeByThreeTunnel(Location startPos, Location curPos, BlockFacing facing) {
-        List<Vector> cube = threeByThree(startPos, curPos, facing);
-        cube.add(new Vector(0, 0, 0).add(facing.getFacing().getOppositeFace().getDirection()));
-        cube.addAll(cube.stream().map(loc -> loc.add(facing.getFacing().getOppositeFace().getDirection())).toList());
-        return cube;
+    private static List<Vector> threeByThreeTunnel(Location startPos, Location curPos, BlockFacing facing) {
+        var offsets = hole(facing);
+        offsets.addAll(threeByThree(startPos, curPos, facing));
+        return offsets;
     }
 
-    public static List<Vector> oneByTwo(Location startPos, Location curPos) {
-        List<Vector> cube = new ArrayList<>();
-        if (startPos.getY() == curPos.getY()) {
-            cube.add(new Vector(0, -1, 0));
-        }
-        return cube;
-    }
-
-    public static List<Vector> oneByTwoTunnel(Location startPos, Location curPos, BlockFacing facing) {
-        List<Vector> cube = hole(facing);
-        if (startPos.getY() == curPos.getY()) {
-            cube.add(new Vector(0, -1, 0));
-        }
-        return cube;
-    }
-
-    public final static List<Vector> standard = new ArrayList<>();
-    public final static List<Vector> standardDiag = new ArrayList<>();
+    private final static List<Vector> standard = new ArrayList<>();
+    private final static List<Vector> standardDiag = new ArrayList<>();
 
     static {
         standard.add(new Vector(0, 1, 0));
@@ -158,7 +166,7 @@ public class ExcavateSpreadHelper {
         standardDiag.add(new Vector(-1, 1, 1));
     }
 
-    private static Location mutate(Location origin, int x, int y, int z) {
-        return origin.clone().add(x, y, z);
+    private static ConfigManager getConfig() {
+        return DiggusMaximusBukkit.getInstance().getConfigManager();
     }
 }
