@@ -123,8 +123,9 @@ public class ExcavateSpreadHelper {
     }
 
     private static List<Vector> threeByThreeTunnel(Location startPos, Location curPos, BlockFacing facing) {
-        var offsets = hole(facing);
-        offsets.addAll(threeByThree(startPos, curPos, facing));
+        var offsets = threeByThree(startPos, curPos, facing);
+        offsets.add(facing.getFacing().getOppositeFace().getDirection());
+        offsets.addAll(offsets.stream().map(p -> p.clone().add(facing.getFacing().getOppositeFace().getDirection())).toList());
         return offsets;
     }
 
@@ -168,5 +169,17 @@ public class ExcavateSpreadHelper {
 
     private static ConfigManager getConfig() {
         return DiggusMaximusBukkit.getInstance().getConfigManager();
+    }
+
+    private static boolean isAxisMatch(Location a, Location b, Axis axis) {
+        if (axis == Axis.X) {
+            return a.getBlockX() == b.getBlockX();
+        }
+
+        if (axis == Axis.Z) {
+            return a.getBlockZ() == b.getBlockZ();
+        }
+
+        return a.getBlockY() == b.getBlockY();
     }
 }

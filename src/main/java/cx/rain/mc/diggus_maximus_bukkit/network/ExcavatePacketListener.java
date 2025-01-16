@@ -5,18 +5,13 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import cx.rain.mc.diggus_maximus_bukkit.PluginConstants;
-import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
 import cx.rain.mc.diggus_maximus_bukkit.excavator.Excavator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class ExcavatePacketListener extends PacketAdapter {
-
-    private final ConfigManager configManager;
-
-    public ExcavatePacketListener(Plugin plugin, ConfigManager configManager, PacketType... types) {
+    public ExcavatePacketListener(Plugin plugin, PacketType... types) {
         super(plugin, ListenerPriority.NORMAL, types);
-        this.configManager = configManager;
     }
 
     @Override

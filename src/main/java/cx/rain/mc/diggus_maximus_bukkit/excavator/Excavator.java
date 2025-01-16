@@ -78,7 +78,8 @@ public class Excavator {
     }
 
     private void tryToExcavate(Location pos) {
-        if (mined >= getConfig().getMaxMineCount() || (getConfig().willDamageTool() && getConfig().shouldDontBreakTool() && isToolAlmostBreak())) {
+        if (mined >= getConfig().getMaxMineCount()
+                || (getConfig().willDamageTool() && getConfig().shouldDontBreakTool() && isToolAlmostBreak())) {
             return;
         }
 

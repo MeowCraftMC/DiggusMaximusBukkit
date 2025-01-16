@@ -32,7 +32,7 @@ public final class DiggusMaximusBukkit extends JavaPlugin {
     @Override
     public void onLoad() {
         protocolManager = ProtocolLibrary.getProtocolManager();
-        listener = new ExcavatePacketListener(this, configManager, PacketType.Play.Client.CUSTOM_PAYLOAD);
+        listener = new ExcavatePacketListener(this, PacketType.Play.Client.CUSTOM_PAYLOAD);
     }
 
     @Override
