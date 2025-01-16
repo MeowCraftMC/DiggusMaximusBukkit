@@ -24,6 +24,11 @@ public class ExcavatePacketListener extends PacketAdapter {
         if (PluginConstants.PACKET_ID.equals(payload.getId())) {
             var packet = PacketReader.read(payload.getData());
             var player = event.getPlayer();
+
+            if (!player.hasPermission(PluginConstants.PERMISSION)) {
+                return;
+            }
+
             var excavate = new Excavator(packet, player);
             Bukkit.getScheduler().runTask(plugin, excavate::start);
         }

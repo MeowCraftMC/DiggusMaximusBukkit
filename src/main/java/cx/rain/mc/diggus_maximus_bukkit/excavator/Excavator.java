@@ -50,10 +50,6 @@ public class Excavator {
     }
 
     public void start() {
-        if (!player.hasPermission(PluginConstants.PERMISSION)) {
-            return;
-        }
-
         var block = startPos.getBlock();
         if (block.isEmpty() || player.breakBlock(block)) {
             points.add(startPos);
