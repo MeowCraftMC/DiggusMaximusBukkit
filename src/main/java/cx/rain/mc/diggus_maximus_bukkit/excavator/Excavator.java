@@ -99,7 +99,10 @@ public class Excavator {
                     .stream()
                     .map(e -> (Item) e)
                     .forEach(e -> {
-                        player.getInventory().addItem(e.getItemStack());
+                        var result = player.getInventory().addItem(e.getItemStack());
+                        for (var i : result.values()) {
+                            world.dropItem(pos, i);
+                        }
                         e.remove();
                     });
         }

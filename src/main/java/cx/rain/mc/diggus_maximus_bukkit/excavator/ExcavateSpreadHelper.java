@@ -86,7 +86,7 @@ public class ExcavateSpreadHelper {
     public static List<Vector> threeByThree(Location startPos, Location curPos, BlockFacing facing) {
         var offsets = new ArrayList<Vector>();
         if (startPos.equals(curPos)) {
-            if (facing.getAxis() == Axis.Z) {
+            if (facing.getAxis() == Axis.X) {
                 offsets.add(new Vector(0, 0, 1));
                 offsets.add(new Vector(0, 0, -1));
                 offsets.add(new Vector(0, 1, 1));

@@ -1,11 +1,10 @@
 plugins {
     id 'java'
-//    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'com.rikonardo.papermake' version '1.0.6'
 }
 
 group = 'cx.rain.mc.diggus_maximus_bukkit'
-version = '1.2.1'
+version = '1.2.2'
 
 allprojects {
     repositories {
