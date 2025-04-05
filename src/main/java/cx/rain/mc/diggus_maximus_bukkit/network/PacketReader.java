@@ -5,10 +5,11 @@ import cx.rain.mc.diggus_maximus_bukkit.excavator.ExcavateShape;
 import cx.rain.mc.diggus_maximus_bukkit.utility.BlockFacing;
 import cx.rain.mc.diggus_maximus_bukkit.utility.FriendlyByteBufHelper;
 import cx.rain.mc.diggus_maximus_bukkit.utility.NamespacedKeyHelper;
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class PacketReader {
-    public static ExcavatePacket read(ByteBuf buf) {
+    public static ExcavatePacket read(byte[] bytes) {
+        var buf = Unpooled.wrappedBuffer(bytes);
         var friendlyBuf = MinecraftMethods.getFriendlyBufBufConstructor().apply(buf);
         var pos = FriendlyByteBufHelper.readBlockPos(friendlyBuf);
         var id = NamespacedKeyHelper.fromMinecraftKey(FriendlyByteBufHelper.readResourceLocation(friendlyBuf));
