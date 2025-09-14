@@ -14,6 +14,7 @@ public class FriendlyByteBufHelper {
 
     public static final Class<?> FRIENDLY_BYTE_BUF = MinecraftReflection.getPacketDataSerializerClass();
     public static final MethodAccessor READ_BLOCK_POS;
+    public static final MethodAccessor READ_VAR_INT;
     public static final MethodAccessor READ_RESOURCE_LOCATION;
 
     static {
@@ -21,6 +22,10 @@ public class FriendlyByteBufHelper {
                 .getMethod(FuzzyMethodContract.newBuilder()
                         .parameterCount(0)
                         .returnTypeExact(MinecraftReflection.getBlockPositionClass())
+                        .build()));
+        READ_VAR_INT = Accessors.getMethodAccessor(FuzzyReflection.fromClass(FRIENDLY_BYTE_BUF)
+                .getMethod(FuzzyMethodContract.newBuilder()
+                        .nameExact("readVarInt")
                         .build()));
         READ_RESOURCE_LOCATION = Accessors.getMethodAccessor(FuzzyReflection.fromClass(FRIENDLY_BYTE_BUF)
                 .getMethod(FuzzyMethodContract.newBuilder()
@@ -33,6 +38,16 @@ public class FriendlyByteBufHelper {
         var obj = READ_BLOCK_POS.invoke(buf);
         var wrapped = BukkitConverters.getSectionPositionConverter().getSpecific(obj);
         return wrapped.toLocation(null);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T extends Enum<T>> T readEnum(Object buf, Class<T> enumClass) {
+        return (T)((Enum[])enumClass.getEnumConstants())[readVarInt(buf)];
+    }
+
+    public static int readVarInt(Object buf) {
+        var obj = READ_VAR_INT.invoke(buf);
+        return (int) obj;
     }
 
     public static MinecraftKey readResourceLocation(Object buf) {

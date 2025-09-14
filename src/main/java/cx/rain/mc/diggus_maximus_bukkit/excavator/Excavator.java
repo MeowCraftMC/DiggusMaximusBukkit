@@ -1,12 +1,11 @@
 package cx.rain.mc.diggus_maximus_bukkit.excavator;
 
 import cx.rain.mc.diggus_maximus_bukkit.DiggusMaximusBukkit;
-import cx.rain.mc.diggus_maximus_bukkit.PluginConstants;
 import cx.rain.mc.diggus_maximus_bukkit.config.ConfigManager;
-import cx.rain.mc.diggus_maximus_bukkit.network.ExcavatePacket;
 import cx.rain.mc.diggus_maximus_bukkit.utility.BlockFacing;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -24,26 +23,34 @@ public class Excavator {
     private final Player player;
     private final World world;
     private final Location startPos;
-    private final BlockFacing facing;
-    private final ExcavateShape shape;
     private final Material startId;
-    private final ItemStack tool;
+    private final BlockFacing hitFace;
+    private final BlockFacing playerHorizontalFace;
+    private final Shape shape;
+    private final boolean stopBeforeToolBroken;
+    private final boolean stopAfterToolBroken;
     private final ItemStack toolBefore;
+    private ItemStack tool;
 
     private final Deque<Location> points = new ArrayDeque<>();
     private int mined = 0;
 
-    public Excavator(ExcavatePacket packet, Player player) {
+    public Excavator(Location startPos, NamespacedKey blockId, BlockFacing hitFace, Shape shape,
+                     boolean stopBeforeToolBroken, boolean stopAfterToolBroken, Player player) {
         this.player = player;
         this.world = player.getWorld();
 
-        this.startPos = packet.pos();
+        this.startPos = startPos;
         this.startPos.setWorld(world);
 
-        this.facing = packet.facing();
-        this.shape = packet.shape();
+        this.hitFace = hitFace;
+        this.playerHorizontalFace = BlockFacing.from(player.getFacing());
+        this.shape = shape;
 
-        this.startId = Material.matchMaterial(packet.id().toString());
+        this.stopBeforeToolBroken = stopBeforeToolBroken;
+        this.stopAfterToolBroken = stopAfterToolBroken;
+
+        this.startId = Material.matchMaterial(blockId.toString());
 
         this.tool = player.getInventory().getItem(EquipmentSlot.HAND);
         this.toolBefore = tool.clone();
@@ -66,16 +73,20 @@ public class Excavator {
     }
 
     private void spread(Location pos) {
-        for (var p : ExcavateSpreadHelper.getOffsets(shape, facing, startPos, pos)) {
+        for (var p : ExcavateSpreadHelper.getSpreadShape(shape, hitFace, playerHorizontalFace, startPos, pos)) {
             if (isValidPos(p)) {
                 tryToExcavate(pos.clone().add(p));
+
+                if (stopAfterToolBroken && wasToolBroken()) {
+                    return;
+                }
             }
         }
     }
 
     private void tryToExcavate(Location pos) {
         if (mined >= getConfig().getMaxMineCount()
-                || (getConfig().willDamageTool() && getConfig().shouldDontBreakTool() && isToolAlmostBreak())) {
+                || (getConfig().willDamageTool() && stopBeforeToolBroken && isToolAlmostBreak())) {
             return;
         }
 
@@ -88,6 +99,8 @@ public class Excavator {
                 && player.breakBlock(block)) {
             excavate(pos);
         }
+
+        tool = player.getInventory().getItem(EquipmentSlot.HAND);
     }
 
     private void excavate(Location pos) {
@@ -117,7 +130,7 @@ public class Excavator {
     }
 
     private boolean isSame(Block block) {
-        if (shape != ExcavateShape.NONE) {
+        if (shape != Shape.NONE) {
             return getConfig().shouldShapeIgnoresBlockMismatch();
         }
 
@@ -148,6 +161,10 @@ public class Excavator {
         }
 
         return block.getType().getHardness() >= 0;
+    }
+
+    private boolean wasToolBroken() {
+        return !toolBefore.isSimilar(tool);
     }
 
     private ConfigManager getConfig() {

@@ -11,6 +11,8 @@ autoPickup: true
 damageTool: true
 # Stop excavate before tool break.
 dontBreakTool: true
+# Stop excavate after tool break.
+stopAfterToolBreak: true
 
 # Shape excavation support.
 enableShape: true

@@ -45,6 +45,10 @@ public class ConfigManager {
         return config.getBoolean("dontBreakTool", true);
     }
 
+    public boolean shouldStopAfterToolBreak() {
+        return config.getBoolean("stopAfterToolBreak", true);
+    }
+
     public boolean requireToolMatches() {
         return config.getBoolean("requireToolMatches", false);
     }
