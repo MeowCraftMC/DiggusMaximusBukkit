@@ -31,6 +31,7 @@ public class Excavator {
     private final boolean stopAfterToolBroken;
     private final ItemStack toolBefore;
     private ItemStack tool;
+//    private boolean wasBrokenOnNextBreak = false;
 
     private final Deque<Location> points = new ArrayDeque<>();
     private int mined = 0;
@@ -48,7 +49,7 @@ public class Excavator {
         this.shape = shape;
 
         this.stopBeforeToolBroken = stopBeforeToolBroken;
-        this.stopAfterToolBroken = stopAfterToolBroken;
+        this.stopAfterToolBroken = stopAfterToolBroken; // Todo: stopAfterToolBroken
 
         this.startId = Material.matchMaterial(blockId.toString());
 
@@ -76,16 +77,13 @@ public class Excavator {
         for (var p : ExcavateSpreadHelper.getSpreadShape(shape, hitFace, playerHorizontalFace, startPos, pos)) {
             if (isValidPos(p)) {
                 tryToExcavate(pos.clone().add(p));
-
-                if (stopAfterToolBroken && wasToolBroken()) {
-                    return;
-                }
             }
         }
     }
 
     private void tryToExcavate(Location pos) {
         if (mined >= getConfig().getMaxMineCount()
+//                || (wasBrokenOnNextBreak && stopAfterToolBroken)
                 || (getConfig().willDamageTool() && stopBeforeToolBroken && isToolAlmostBreak())) {
             return;
         }
@@ -99,8 +97,6 @@ public class Excavator {
                 && player.breakBlock(block)) {
             excavate(pos);
         }
-
-        tool = player.getInventory().getItem(EquipmentSlot.HAND);
     }
 
     private void excavate(Location pos) {
@@ -123,6 +119,7 @@ public class Excavator {
 
     private boolean isToolAlmostBreak() {
         if (tool != null && tool.hasItemMeta() && tool.getItemMeta() instanceof Damageable damageable) {
+//            wasBrokenOnNextBreak = true;
             return damageable.getDamage() >= tool.getType().getMaxDurability() - 1;
         }
 
@@ -161,10 +158,6 @@ public class Excavator {
         }
 
         return block.getType().getHardness() >= 0;
-    }
-
-    private boolean wasToolBroken() {
-        return !toolBefore.isSimilar(tool);
     }
 
     private ConfigManager getConfig() {
